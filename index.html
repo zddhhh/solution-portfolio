@@ -201,21 +201,46 @@
         .ft-docx { background: rgba(37,99,235,0.06); color: #2563eb; }
         .ft-xlsx { background: rgba(13,148,136,0.06); color: #0d9488; }
 
-        /* Slide Grid */
-        .slide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; }
-        .slide-thumb {
-            border-radius: 8px; overflow: hidden; border: 1px solid var(--glass-border);
-            cursor: pointer; aspect-ratio: 16/9; position: relative;
-            transition: all 0.2s;
+        /* Slide Viewer */
+        .slide-viewer {
+            position: relative; width: 100%; max-width: 800px; margin: 0 auto;
+            background: white; border: 1px solid var(--glass-border); border-radius: 12px;
+            overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06);
         }
-        .slide-thumb:hover { border-color: var(--accent); transform: scale(1.01); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-        .slide-thumb img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-        .slide-thumb:hover img { opacity: 1; }
-        .slide-thumb .num {
-            position: absolute; bottom: 4px; left: 6px;
-            background: rgba(0,0,0,0.75); color: rgba(255,255,255,0.7);
-            font-size: 9px; font-weight: 500; padding: 1px 5px; border-radius: 3px;
+        .slide-viewer .slide-img {
+            width: 100%; aspect-ratio: 16/9; object-fit: contain;
+            display: block; pointer-events: none; background: #f5f5f5;
         }
+        .slide-viewer .slide-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(255,255,255,0.9); border: 1px solid var(--glass-border);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1.1rem; color: var(--text-secondary);
+            transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .slide-viewer .slide-nav:hover { background: white; color: var(--text); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+        .slide-viewer .slide-nav.prev { left: 12px; }
+        .slide-viewer .slide-nav.next { right: 12px; }
+        .slide-viewer .slide-info {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.8rem 1.2rem; border-top: 1px solid var(--glass-border);
+            background: rgba(250,250,250,0.8);
+        }
+        .slide-viewer .slide-counter { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+        .slide-viewer .slide-dots {
+            display: flex; gap: 4px; align-items: center;
+        }
+        .slide-viewer .slide-dots .dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--glass-border); transition: all 0.2s; cursor: pointer;
+        }
+        .slide-viewer .slide-dots .dot.active { background: var(--accent); width: 16px; border-radius: 3px; }
+        .slide-viewer .slide-fullscreen {
+            background: none; border: none; cursor: pointer;
+            font-size: 14px; color: var(--text-muted); transition: color 0.2s;
+        }
+        .slide-viewer .slide-fullscreen:hover { color: var(--accent); }
 
         /* Markdown Content */
         .md-content {
@@ -359,7 +384,16 @@
             <div class="d-section">
                 <div class="d-section-head"><div class="bar"></div><span data-zh="标准方案 PPT" data-en="Standard Solution PPT">标准方案 PPT</span></div>
                 <p class="d-section-desc" data-zh="19页 · 问题导向 · 架构图 · 场景联动 · ROI测算" data-en="19 slides · Problem-oriented · Architecture · Scenarios · ROI">19页 · 问题导向 · 架构图 · 场景联动 · ROI测算</p>
-                <div class="slide-grid" id="grid-meeting"></div>
+                <div class="slide-viewer" id="viewer-meeting">
+                    <img class="slide-img" id="img-meeting" src="" alt="">
+                    <button class="slide-nav prev" onclick="slideNav('meeting',-1)">&#8249;</button>
+                    <button class="slide-nav next" onclick="slideNav('meeting',1)">&#8250;</button>
+                    <div class="slide-info">
+                        <span class="slide-counter" id="counter-meeting"></span>
+                        <div class="slide-dots" id="dots-meeting"></div>
+                        <button class="slide-fullscreen" onclick="openLightbox('meeting', slideIndexes.meeting)" title="全屏">⛶</button>
+                    </div>
+                </div>
             </div>
 
             <div class="d-section">
@@ -401,7 +435,16 @@
             <div class="d-section">
                 <div class="d-section-head"><div class="bar"></div><span data-zh="标准方案 PPT" data-en="Standard Solution PPT">标准方案 PPT</span></div>
                 <p class="d-section-desc" data-zh="19页 · 五大场景 · 架构图 · 设备拓扑" data-en="19 slides · Five scenarios · Architecture · Device topology">19页 · 五大场景 · 架构图 · 设备拓扑</p>
-                <div class="slide-grid" id="grid-park"></div>
+                <div class="slide-viewer" id="viewer-park">
+                    <img class="slide-img" id="img-park" src="" alt="">
+                    <button class="slide-nav prev" onclick="slideNav('park',-1)">&#8249;</button>
+                    <button class="slide-nav next" onclick="slideNav('park',1)">&#8250;</button>
+                    <div class="slide-info">
+                        <span class="slide-counter" id="counter-park"></span>
+                        <div class="slide-dots" id="dots-park"></div>
+                        <button class="slide-fullscreen" onclick="openLightbox('park', slideIndexes.park)" title="全屏">⛶</button>
+                    </div>
+                </div>
             </div>
 
             <div class="d-section">
@@ -445,9 +488,9 @@
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
         <button class="close" onclick="closeLightbox()">&times;</button>
-        <button class="nav prev" onclick="navSlide(-1)">&#8249;</button>
+        <button class="nav prev" onclick="navLightbox(-1)">&#8249;</button>
         <img id="lightbox-img" src="" alt="">
-        <button class="nav next" onclick="navSlide(1)">&#8250;</button>
+        <button class="nav next" onclick="navLightbox(1)">&#8250;</button>
         <div class="counter" id="lightbox-counter"></div>
         <div class="watermark">PREVIEW</div>
     </div>
@@ -455,22 +498,44 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         const galleries = { meeting: { total: 19, path: 'assets/meeting-room/slide_' }, park: { total: 19, path: 'assets/smart-park/slide_' } };
+        const slideIndexes = { meeting: 0, park: 0 };
         let currentGallery = null, currentIndex = 0;
         let navHistory = ['page-home'];
 
+        function getSlideSrc(key, idx) {
+            return `${galleries[key].path}${String(idx+1).padStart(2,'0')}.png`;
+        }
+
+        // Initialize slide viewers
         Object.keys(galleries).forEach(key => {
-            const grid = document.getElementById(`grid-${key}`);
-            const g = galleries[key];
-            for (let i = 1; i <= g.total; i++) {
-                const src = `${g.path}${String(i).padStart(2,'0')}.png`;
-                const div = document.createElement('div');
-                div.className = 'slide-thumb';
-                div.onclick = () => openLightbox(key, i - 1);
-                div.innerHTML = `<img src="${src}" alt=""><span class="num">${i}</span>`;
-                grid.appendChild(div);
+            const dotsEl = document.getElementById(`dots-${key}`);
+            const total = galleries[key].total;
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (i === 0 ? ' active' : '');
+                dot.onclick = () => { slideIndexes[key] = i; updateSlideViewer(key); };
+                dotsEl.appendChild(dot);
             }
+            updateSlideViewer(key);
         });
 
+        function updateSlideViewer(key) {
+            const idx = slideIndexes[key];
+            const total = galleries[key].total;
+            document.getElementById(`img-${key}`).src = getSlideSrc(key, idx);
+            document.getElementById(`counter-${key}`).textContent = `${idx+1} / ${total}`;
+            document.querySelectorAll(`#dots-${key} .dot`).forEach((d, i) => {
+                d.classList.toggle('active', i === idx);
+            });
+        }
+
+        function slideNav(key, dir) {
+            const total = galleries[key].total;
+            slideIndexes[key] = (slideIndexes[key] + dir + total) % total;
+            updateSlideViewer(key);
+        }
+
+        // Page navigation
         function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -488,28 +553,40 @@
         function goHome() { navHistory = ['page-home']; showPage('page-home'); }
         function goBack() { navHistory.pop(); showPage(navHistory[navHistory.length-1] || 'page-home'); }
 
+        // Lightbox (fullscreen)
         function openLightbox(gallery, index) {
             currentGallery = gallery; currentIndex = index;
             updateLightbox(); document.getElementById('lightbox').classList.add('active');
         }
         function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
-        function navSlide(dir) {
+        function navLightbox(dir) {
             currentIndex = (currentIndex + dir + galleries[currentGallery].total) % galleries[currentGallery].total;
             updateLightbox();
         }
         function updateLightbox() {
-            const g = galleries[currentGallery];
-            document.getElementById('lightbox-img').src = `${g.path}${String(currentIndex+1).padStart(2,'0')}.png`;
-            document.getElementById('lightbox-counter').textContent = `${currentIndex+1} / ${g.total}`;
+            document.getElementById('lightbox-img').src = getSlideSrc(currentGallery, currentIndex);
+            document.getElementById('lightbox-counter').textContent = `${currentIndex+1} / ${galleries[currentGallery].total}`;
         }
         document.addEventListener('keydown', e => {
-            if (!document.getElementById('lightbox').classList.contains('active')) return;
-            if (e.key==='Escape') closeLightbox();
-            if (e.key==='ArrowLeft') navSlide(-1);
-            if (e.key==='ArrowRight') navSlide(1);
+            if (document.getElementById('lightbox').classList.contains('active')) {
+                if (e.key==='Escape') closeLightbox();
+                if (e.key==='ArrowLeft') navLightbox(-1);
+                if (e.key==='ArrowRight') navLightbox(1);
+                return;
+            }
+            // Arrow keys for slide viewer on detail pages
+            const activePage = document.querySelector('.page.active');
+            if (activePage && activePage.id === 'page-meeting') {
+                if (e.key==='ArrowLeft') slideNav('meeting', -1);
+                if (e.key==='ArrowRight') slideNav('meeting', 1);
+            } else if (activePage && activePage.id === 'page-park') {
+                if (e.key==='ArrowLeft') slideNav('park', -1);
+                if (e.key==='ArrowRight') slideNav('park', 1);
+            }
         });
         document.addEventListener('contextmenu', e => { if (e.target.tagName==='IMG') e.preventDefault(); });
 
+        // Language
         let currentLang = 'zh';
         function setLang(lang) {
             currentLang = lang;
