@@ -160,7 +160,7 @@
         .page { display: none; position: relative; z-index: 1; padding-bottom: 4rem; }
         .page.active { display: block; }
         .page-nav {
-            display: flex; align-items: center; gap: 1rem; padding: 6rem 0 2rem;
+            display: flex; align-items: center; gap: 1rem; padding: 5rem 0 1.5rem;
         }
         .back-btn {
             background: var(--glass); border: 1px solid var(--glass-border);
@@ -177,17 +177,17 @@
         }
 
         /* Detail Sections */
-        .d-section { margin-bottom: 3.5rem; }
+        .d-section { margin-bottom: 2.5rem; }
         .d-section-head {
             display: flex; align-items: center; gap: 8px; margin-bottom: 0.3rem;
         }
         .d-section-head .bar { width: 3px; height: 14px; border-radius: 2px; background: var(--accent); }
         .d-section-head span { font-size: 0.9rem; font-weight: 600; letter-spacing: -0.01em; }
-        .d-section-desc { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.2rem; font-weight: 400; padding-left: 11px; }
+        .d-section-desc { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.8rem; font-weight: 400; padding-left: 11px; }
 
         /* Item cards in detail */
-        .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.8rem; }
-        .items.narrow { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+        .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.6rem; }
+        .items.narrow { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
         .item {
             background: var(--glass); border: 1px solid var(--glass-border);
             border-radius: 10px; padding: 1.2rem 1.4rem; cursor: pointer;
@@ -203,7 +203,7 @@
 
         /* Slide Viewer */
         .slide-viewer {
-            position: relative; width: 100%; max-width: 800px; margin: 0 auto;
+            position: relative; width: 100%;
             background: white; border: 1px solid var(--glass-border); border-radius: 12px;
             overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06);
         }
