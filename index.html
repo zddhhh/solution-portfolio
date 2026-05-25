@@ -142,21 +142,37 @@
             font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
             text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.5rem;
         }
-        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.8rem; }
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
         .project-item {
-            background: var(--glass); border: 1px solid var(--glass-border);
-            border-radius: 10px; padding: 1.2rem 1.4rem;
-            transition: all 0.2s; backdrop-filter: blur(8px);
+            background: #fff; border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 12px; padding: 0; overflow: hidden;
+            transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-        .project-item:hover { border-color: rgba(0,0,0,0.1); background: var(--glass-hover); box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
-        .project-item h4 { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.2rem; letter-spacing: -0.01em; }
-        .project-item p { font-size: 0.72rem; color: var(--text-muted); font-weight: 400; }
+        .project-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); border-color: rgba(99,102,241,0.2); }
+        .project-item .card-top {
+            height: 56px; position: relative; overflow: hidden;
+        }
+        .project-item:nth-child(1) .card-top { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .project-item:nth-child(2) .card-top { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .project-item:nth-child(3) .card-top { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .project-item:nth-child(4) .card-top { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .project-item:nth-child(5) .card-top { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .project-item:nth-child(6) .card-top { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+        .project-item:nth-child(7) .card-top { background: linear-gradient(135deg, #fccb90 0%, #d57eeb 100%); }
+        .project-item:nth-child(8) .card-top { background: linear-gradient(135deg, #96fbc4 0%, #f9f586 100%); }
+        .project-item .card-top::after {
+            content: ''; position: absolute; inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='45' cy='15' r='20' fill='rgba(255,255,255,0.12)'/%3E%3Ccircle cx='10' cy='50' r='15' fill='rgba(255,255,255,0.08)'/%3E%3C/svg%3E") no-repeat right top;
+        }
+        .project-item .card-body { padding: 1rem 1.2rem; }
+        .project-item h4 { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.3rem; letter-spacing: -0.01em; color: var(--text-primary); }
+        .project-item p { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; line-height: 1.5; }
         .project-item .badge {
-            display: inline-block; margin-top: 0.5rem; font-size: 9px; font-weight: 600;
-            padding: 2px 6px; border-radius: 3px; letter-spacing: 0.02em;
+            display: inline-block; margin-top: 0.6rem; font-size: 9px; font-weight: 600;
+            padding: 3px 8px; border-radius: 4px; letter-spacing: 0.02em;
         }
-        .badge-red { background: rgba(239,68,68,0.06); color: #dc2626; }
-        .badge-green { background: rgba(13,148,136,0.06); color: #0d9488; }
+        .badge-red { background: rgba(239,68,68,0.08); color: #dc2626; }
+        .badge-green { background: rgba(13,148,136,0.08); color: #0d9488; }
 
         /* Detail Page */
         .page { display: none; position: relative; z-index: 1; padding-bottom: 4rem; }
@@ -359,14 +375,14 @@
             <div class="projects-section">
                 <div class="section-label" data-zh="实战项目" data-en="PROJECT EXPERIENCE">实战项目</div>
                 <div class="project-grid">
-                    <div class="project-item"><h4>南湾商业</h4><p>25子系统 · 9 IC801 + 35 IC204</p><span class="badge badge-green">设备清单V5</span></div>
-                    <div class="project-item"><h4>滨海湾</h4><p>1000+设备 · 一区一超级设备</p><span class="badge badge-red">方案+报价</span></div>
-                    <div class="project-item"><h4>龙岗科创局</h4><p>Space Smart One v1.5</p><span class="badge badge-red">方案</span></div>
-                    <div class="project-item"><h4>联通水务</h4><p>水务场景 · 方案深化</p><span class="badge badge-red">方案</span></div>
-                    <div class="project-item"><h4>宝安教育</h4><p>区级底座 · 30+所学校</p><span class="badge badge-red">方案</span></div>
-                    <div class="project-item"><h4>市委党校</h4><p>智慧教学空间</p><span class="badge badge-red">方案</span></div>
-                    <div class="project-item"><h4>宝安机场 IDC</h4><p>AI补盲 · CAD标注</p><span class="badge badge-red">方案+图纸</span></div>
-                    <div class="project-item"><h4>东莞展厅</h4><p>鸿蒙化展厅</p><span class="badge badge-red">方案</span></div>
+                    <div class="project-item"><div class="card-top"></div><div class="card-body"><h4>南湾商业</h4><p>25子系统 · 9 IC801 + 35 IC204</p><span class="badge badge-green">设备清单V5</span></div></div>
+                    <div class="project-item"><div class="card-top"></div><div class="card-body"><h4>滨海湾</h4><p>1000+设备 · 一区一超级设备</p><span class="badge badge-red">方案+报价</span></div></div>
+                    <div class="project-item"><div class="card-top"></div><div class="card-body"><h4>龙岗科创局</h4><p>Space Smart One v1.5</p><span class="badge badge-red">方案</span></div></div>
+                    <div class="project-item"><div class="card-top"></div><div class="card-body"><h4>联通水务</h4><p>水务场景 · 方案深化</p><span class="badge badge-red">方案</span></div></div>
+                    <div class="project-item"><div class="card-top"></div><div class="card-body"><h4>宝安教育</h4><p>区级底座 · 30+所学校</p><span class="badge badge-red">方案</span></div></div>
+                    <div class="project-item"><div class="card-top"></div><div class="card-body"><h4>市委党校</h4><p>智慧教学空间</p><span class="badge badge-red">方案</span></div></div>
+                    <div class="project-item"><div class="card-top"></div><div class="card-body"><h4>宝安机场 IDC</h4><p>AI补盲 · CAD标注</p><span class="badge badge-red">方案+图纸</span></div></div>
+                    <div class="project-item"><div class="card-top"></div><div class="card-body"><h4>东莞展厅</h4><p>鸿蒙化展厅</p><span class="badge badge-red">方案</span></div></div>
                 </div>
             </div>
 
