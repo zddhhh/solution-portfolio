@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>解决方案工程 | 作品展示</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #f8f9fc;
+            --surface: #ffffff;
+            --surface2: #f0f2f8;
+            --border: #e2e5f0;
+            --text: #1a1a2e;
+            --text-muted: #6b7094;
+            --accent: #6c3bd0;
+            --accent2: #0ea5e9;
+            --glow: rgba(108,59,208,0.08);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        img { -webkit-user-drag: none; pointer-events: none; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        .bg-glow {
+            position: fixed; border-radius: 50%; filter: blur(150px);
+            opacity: 0.06; pointer-events: none; z-index: 0;
+        }
+        .bg-glow.g1 { width: 600px; height: 600px; top: -200px; left: -100px; background: var(--accent); animation: float 10s ease-in-out infinite; }
+        .bg-glow.g2 { width: 500px; height: 500px; bottom: -150px; right: -80px; background: var(--accent2); animation: float 12s ease-in-out infinite reverse; }
+        @keyframes float { 0%,100%{transform:translate(0,0)} 50%{transform:translate(25px,15px)} }
+
+        /* Lang Toggle */
+        .lang-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 100;
+            background: white; border: 1px solid var(--border);
+            border-radius: 8px; padding: 0.3rem; display: flex; gap: 2px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .lang-toggle button {
+            padding: 0.3rem 0.7rem; border: none; border-radius: 6px;
+            font-size: 0.75rem; cursor: pointer; background: transparent; color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .lang-toggle button.active { background: var(--accent); color: white; }
+
+        /* Hero */
+        .hero { position: relative; z-index: 1; text-align: center; padding: 5rem 0 2rem; }
+        .hero .badge {
+            display: inline-block; padding: 0.25rem 0.8rem;
+            border: 1px solid var(--border); border-radius: 999px;
+            font-size: 0.7rem; color: var(--accent); margin-bottom: 1.2rem;
+            background: rgba(108,59,208,0.06);
+        }
+        .hero h1 {
+            font-size: 3rem; font-weight: 800; margin-bottom: 1rem;
+            background: linear-gradient(135deg, #1a1a2e 30%, #6c3bd0 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p { font-size: 1rem; color: var(--text-muted); max-width: 580px; margin: 0 auto; line-height: 1.8; }
+
+        /* Flow Bar */
+        .flow-bar {
+            display: flex; justify-content: center; gap: 0; margin: 2.5rem 0 3rem;
+            position: relative; z-index: 1;
+        }
+        .flow-bar::before {
+            content: ''; position: absolute; top: 50%; left: 12%; right: 12%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent); opacity: 0.25;
+        }
+        .flow-item { display: flex; flex-direction: column; align-items: center; padding: 0 1rem; position: relative; }
+        .flow-item .dot {
+            width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
+            box-shadow: 0 0 8px rgba(108,59,208,0.4); margin-bottom: 0.4rem;
+        }
+        .flow-item:nth-child(even) .dot { background: var(--accent2); box-shadow: 0 0 8px rgba(14,165,233,0.4); }
+        .flow-item span { font-size: 0.65rem; color: var(--text-muted); white-space: nowrap; }
+
+        /* Industry Entry Cards */
+        .entry-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
+            position: relative; z-index: 1; margin-bottom: 4rem;
+        }
+        .entry-card {
+            background: white; border: 1px solid var(--border); border-radius: 16px;
+            padding: 2.5rem 2rem; cursor: pointer; transition: all 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .entry-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .entry-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(108,59,208,0.12); }
+        .entry-card:hover::before { opacity: 1; }
+        .entry-card .icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .entry-card h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .entry-card .desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1rem; }
+        .entry-card .stats { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .entry-card .stat {
+            padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.7rem; font-weight: 600;
+            background: rgba(108,59,208,0.06); color: var(--accent);
+        }
+        .entry-card:nth-child(2) .stat { background: rgba(14,165,233,0.06); color: var(--accent2); }
+
+        /* Project Experience */
+        .project-section { position: relative; z-index: 1; margin-bottom: 4rem; }
+        .project-section h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .project-section .desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+        .project-card {
+            background: white; border: 1px solid var(--border); border-radius: 12px;
+            padding: 1.2rem 1.4rem; transition: all 0.2s;
+        }
+        .project-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(108,59,208,0.06); }
+        .project-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .project-card p { font-size: 0.75rem; color: var(--text-muted); }
+        .project-card .tag {
+            display: inline-block; margin-top: 0.5rem; font-size: 0.6rem; font-weight: 700;
+            padding: 0.12rem 0.4rem; border-radius: 4px;
+        }
+        .tag-pptx { background: rgba(239,68,68,0.08); color: #dc2626; }
+        .tag-xlsx { background: rgba(16,185,129,0.08); color: #059669; }
+
+        /* Detail Page */
+        .page { display: none; position: relative; z-index: 1; padding-bottom: 4rem; }
+        .page.active { display: block; }
+        .page-header {
+            display: flex; align-items: center; gap: 1rem; padding: 3rem 0 2rem;
+        }
+        .back-btn {
+            background: white; border: 1px solid var(--border); border-radius: 8px;
+            padding: 0.45rem 0.9rem; cursor: pointer; font-size: 0.8rem; color: var(--text); transition: all 0.2s;
+        }
+        .back-btn:hover { border-color: var(--accent); color: var(--accent); background: #f8f7ff; }
+        .page-header h2 { font-size: 1.5rem; font-weight: 700; }
+        .page-header .badge-sm {
+            display: inline-block; padding: 0.2rem 0.6rem; border-radius: 6px;
+            font-size: 0.65rem; font-weight: 700; background: rgba(108,59,208,0.08); color: var(--accent);
+        }
+
+        /* Section within detail page */
+        .detail-section { margin-bottom: 3rem; }
+        .detail-section-title {
+            font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .detail-section-title .dot-indicator {
+            width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+        }
+        .detail-section-desc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem; }
+
+        /* Cards in detail */
+        .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .item-grid.narrow { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+        .item-card {
+            background: white; border: 1px solid var(--border); border-radius: 12px;
+            overflow: hidden; cursor: pointer; transition: all 0.25s;
+            border-left: 3px solid transparent;
+        }
+        .item-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(108,59,208,0.1); border-left-color: var(--accent); }
+        .item-card.pptx { border-left-color: #ef4444; }
+        .item-card .thumb { width: 100%; aspect-ratio: 16/9; overflow: hidden; position: relative; }
+        .item-card .thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; pointer-events: none; }
+        .item-card .thumb .overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.6) 100%); }
+        .item-card .thumb .slide-count {
+            position: absolute; top: 8px; right: 8px;
+            background: rgba(124,58,237,0.9); color: white;
+            padding: 0.12rem 0.45rem; border-radius: 5px; font-size: 0.6rem; font-weight: 700;
+        }
+        .item-card .body { padding: 1rem 1.2rem 1.2rem; }
+        .item-card .body h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
+        .item-card .body p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+        .item-card .body .ft {
+            display: inline-block; margin-top: 0.4rem; padding: 0.1rem 0.4rem;
+            border-radius: 4px; font-size: 0.6rem; font-weight: 700;
+        }
+        .ft-pptx { background: rgba(239,68,68,0.08); color: #dc2626; }
+        .ft-docx { background: rgba(59,130,246,0.08); color: #2563eb; }
+        .ft-xlsx { background: rgba(16,185,129,0.08); color: #059669; }
+
+        /* Slide Grid */
+        .slide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.6rem; }
+        .slide-thumb {
+            border-radius: 8px; overflow: hidden; border: 1px solid var(--border);
+            cursor: pointer; aspect-ratio: 16/9; position: relative; transition: transform 0.15s, border-color 0.15s;
+        }
+        .slide-thumb:hover { transform: scale(1.02); border-color: var(--accent); }
+        .slide-thumb img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        .slide-thumb .num {
+            position: absolute; bottom: 3px; left: 5px;
+            background: rgba(0,0,0,0.7); color: white; font-size: 0.55rem; padding: 0.1rem 0.3rem; border-radius: 3px;
+        }
+
+        /* Markdown Content */
+        .md-content {
+            background: white; border: 1px solid var(--border); border-radius: 12px;
+            padding: 2.5rem; max-width: 800px; margin: 0 auto;
+            font-size: 0.88rem; line-height: 1.8; user-select: text;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .md-content h1 { font-size: 1.4rem; margin-bottom: 1rem; color: var(--text); }
+        .md-content h2 { font-size: 1.15rem; margin: 1.5rem 0 0.5rem; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+        .md-content h3 { font-size: 1rem; margin: 1.2rem 0 0.3rem; color: var(--text); }
+        .md-content p { margin-bottom: 0.8rem; color: #4a4a6a; }
+        .md-content ul, .md-content ol { padding-left: 1.5rem; margin-bottom: 0.8rem; color: #4a4a6a; }
+        .md-content li { margin-bottom: 0.3rem; }
+        .md-content blockquote { border-left: 3px solid var(--accent); padding: 0.8rem 1rem; color: var(--text-muted); font-style: italic; margin-bottom: 1rem; background: #f8f7ff; border-radius: 0 6px 6px 0; }
+        .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.8rem; }
+        .md-content th, .md-content td { padding: 0.5rem 0.8rem; border: 1px solid var(--border); text-align: left; }
+        .md-content th { background: #f5f5ff; color: var(--text); font-weight: 600; }
+        .md-content td { color: #4a4a6a; }
+        .md-content code { background: #f0f0f8; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.82rem; color: var(--accent); }
+        .md-content strong { color: var(--text); }
+
+        /* Lightbox */
+        .lightbox {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96);
+            z-index: 2000; align-items: center; justify-content: center; flex-direction: column;
+        }
+        .lightbox.active { display: flex; }
+        .lightbox img { max-width: 92vw; max-height: 84vh; border-radius: 6px; pointer-events: auto; }
+        .lightbox .nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+            color: white; font-size: 1.8rem; width: 44px; height: 44px; border-radius: 50%;
+            cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .lightbox .nav:hover { background: rgba(255,255,255,0.2); }
+        .lightbox .nav.prev { left: 16px; }
+        .lightbox .nav.next { right: 16px; }
+        .lightbox .close { position: absolute; top: 14px; right: 18px; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; opacity: 0.6; }
+        .lightbox .close:hover { opacity: 1; }
+        .lightbox .counter { margin-top: 0.7rem; color: rgba(255,255,255,0.4); font-size: 0.75rem; }
+        .lightbox .watermark {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-25deg);
+            font-size: 4.5rem; color: rgba(255,255,255,0.03); font-weight: 900; pointer-events: none; letter-spacing: 0.8rem;
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 1.8rem; }
+            .entry-grid { grid-template-columns: 1fr; }
+            .item-grid { grid-template-columns: 1fr; }
+            .slide-grid { grid-template-columns: repeat(2, 1fr); }
+            .flow-bar { flex-wrap: wrap; gap: 0.3rem; }
+            .flow-bar::before { display: none; }
+            .md-content { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow g1"></div>
+    <div class="bg-glow g2"></div>
+
+    <div class="lang-toggle">
+        <button class="active" onclick="setLang('zh')">中文</button>
+        <button onclick="setLang('en')">EN</button>
+    </div>
+
+    <div class="container">
+        <!-- ========== HOME ========== -->
+        <div id="page-home" class="page active">
+            <div class="hero">
+                <span class="badge" data-zh="OpenHarmony 智慧空间 · AI 驱动" data-en="OpenHarmony Smart Space · AI Powered">OpenHarmony 智慧空间 · AI 驱动</span>
+                <h1 data-zh="解决方案工程<br>作品展示" data-en="Solution Engineering<br>Portfolio">解决方案工程<br>作品展示</h1>
+                <p data-zh="从场景规划到方案设计到报价交付<br>全流程AI加速的智慧空间解决方案工程" data-en="From scenario planning to solution design to pricing delivery<br>AI-accelerated smart space solution engineering">从场景规划到方案设计到报价交付<br>全流程AI加速的智慧空间解决方案工程</p>
+            </div>
+
+            <div class="flow-bar">
+                <div class="flow-item"><div class="dot"></div><span data-zh="场景规划" data-en="Scenario">场景规划</span></div>
+                <div class="flow-item"><div class="dot"></div><span data-zh="行业研究" data-en="Research">行业研究</span></div>
+                <div class="flow-item"><div class="dot"></div><span data-zh="竞品分析" data-en="Compete">竞品分析</span></div>
+                <div class="flow-item"><div class="dot"></div><span data-zh="方案设计" data-en="Design">方案设计</span></div>
+                <div class="flow-item"><div class="dot"></div><span data-zh="设备选型" data-en="Devices">设备选型</span></div>
+                <div class="flow-item"><div class="dot"></div><span data-zh="报价清单" data-en="Pricing">报价清单</span></div>
+                <div class="flow-item"><div class="dot"></div><span data-zh="交付" data-en="Deliver">交付</span></div>
+            </div>
+
+            <!-- Two Industry Entry Cards -->
+            <div class="entry-grid">
+                <div class="entry-card" onclick="showIndustry('meeting')">
+                    <div class="icon">🏢</div>
+                    <h3 data-zh="智慧会议室" data-en="Smart Meeting Room">智慧会议室</h3>
+                    <p class="desc" data-zh="端侧闭环联动 · 毫秒级响应 · 超级设备方案<br>覆盖从单间到多楼层的会议空间智能化" data-en="Edge-side closed-loop · Millisecond response · Super Device solution<br>From single room to multi-floor meeting space intelligence">端侧闭环联动 · 毫秒级响应 · 超级设备方案<br>覆盖从单间到多楼层的会议空间智能化</p>
+                    <div class="stats">
+                        <span class="stat" data-zh="方案PPT" data-en="PPT">方案PPT</span>
+                        <span class="stat" data-zh="行业研究" data-en="Research">行业研究</span>
+                        <span class="stat" data-zh="竞品分析" data-en="Compete">竞品分析</span>
+                        <span class="stat" data-zh="设备清单" data-en="Devices">设备清单</span>
+                        <span class="stat" data-zh="FAQ" data-en="FAQ">FAQ</span>
+                        <span class="stat" data-zh="讲解稿" data-en="Script">讲解稿</span>
+                    </div>
+                </div>
+                <div class="entry-card" onclick="showIndustry('park')">
+                    <div class="icon">🌳</div>
+                    <h3 data-zh="智慧公园" data-en="Smart Park">智慧公园</h3>
+                    <p class="desc" data-zh="安防 · 生态养护 · 照明/能源 · 广播/信发 · 人员管理<br>五大场景一体化智慧公园解决方案" data-en="Security · Ecology · Lighting · Broadcasting · Personnel<br>Five-scenario integrated smart park solution">安防 · 生态养护 · 照明/能源 · 广播/信发 · 人员管理<br>五大场景一体化智慧公园解决方案</p>
+                    <div class="stats">
+                        <span class="stat" data-zh="方案PPT" data-en="PPT">方案PPT</span>
+                        <span class="stat" data-zh="行业研究" data-en="Research">行业研究</span>
+                        <span class="stat" data-zh="竞品分析" data-en="Compete">竞品分析</span>
+                        <span class="stat" data-zh="设备清单" data-en="Devices">设备清单</span>
+                        <span class="stat" data-zh="FAQ" data-en="FAQ">FAQ</span>
+                        <span class="stat" data-zh="讲解稿" data-en="Script">讲解稿</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real Project Experience -->
+            <div class="project-section">
+                <h3 data-zh="实战项目经验" data-en="Project Experience">实战项目经验</h3>
+                <p class="desc" data-zh="累计20+项目 · 覆盖多种智慧空间场景" data-en="20+ projects · Multiple smart space scenarios">累计20+项目 · 覆盖多种智慧空间场景</p>
+                <div class="project-grid">
+                    <div class="project-card"><h4>南湾商业 · 鸿蒙化</h4><p>25子系统 · 9 IC801 + 35 IC204</p><span class="tag tag-xlsx">设备清单V5</span></div>
+                    <div class="project-card"><h4>滨海湾 · 多楼层改造</h4><p>1000+设备 · 一区一超级设备</p><span class="tag tag-pptx">方案+报价</span></div>
+                    <div class="project-card"><h4>龙岗科创局 · 智慧会议室</h4><p>Space Smart One v1.5</p><span class="tag tag-pptx">方案</span></div>
+                    <div class="project-card"><h4>联通水务 · 鸿蒙化</h4><p>水务场景分析 · 方案深化</p><span class="tag tag-pptx">方案</span></div>
+                    <div class="project-card"><h4>宝安教育 · 智慧校园</h4><p>区级底座 · 30+所学校</p><span class="tag tag-pptx">方案</span></div>
+                    <div class="project-card"><h4>市委党校 · 智慧教室</h4><p>智慧教学空间改造</p><span class="tag tag-pptx">方案</span></div>
+                    <div class="project-card"><h4>宝安机场 · IDC改造</h4><p>AI补盲 · CAD标注</p><span class="tag tag-pptx">方案+图纸</span></div>
+                    <div class="project-card"><h4>东莞 · 标准展厅</h4><p>鸿蒙化展厅方案</p><span class="tag tag-pptx">方案</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== MEETING ROOM FULL PACKAGE ========== -->
+        <div id="page-meeting" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="goHome()">← 返回</button>
+                <h2 data-zh="智慧会议室 · 完整方案包" data-en="Smart Meeting Room · Full Package">智慧会议室 · 完整方案包</h2>
+                <span class="badge-sm">7件套</span>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title"><div class="dot-indicator"></div><span data-zh="标准方案PPT" data-en="Standard Solution PPT">标准方案PPT</span></div>
+                <p class="detail-section-desc" data-zh="问题导向型结构 · 架构图 · 场景联动 · 设备拓扑 · ROI测算 · 19页" data-en="Problem-oriented structure · Architecture · Scenarios · ROI · 19 slides">问题导向型结构 · 架构图 · 场景联动 · 设备拓扑 · ROI测算 · 19页</p>
+                <div class="slide-grid" id="grid-meeting"></div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title"><div class="dot-indicator"></div><span data-zh="行业研究报告" data-en="Industry Research Report">行业研究报告</span></div>
+                <p class="detail-section-desc" data-zh="市场规模 · 技术趋势 · 政策驱动 · 竞争格局 · 机会分析" data-en="Market size · Tech trends · Policy drivers · Competition · Opportunities">市场规模 · 技术趋势 · 政策驱动 · 竞争格局 · 机会分析</p>
+                <div class="item-grid">
+                    <div class="item-card" onclick="showMd('meeting-research','智慧会议室行业研究报告')"><div class="body"><h4>智慧会议室行业研究报告</h4><p>15页深度报告 · 国内外市场+政策+技术路线</p><span class="ft ft-docx">DOCX</span></div></div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title"><div class="dot-indicator"></div><span data-zh="竞品对比分析" data-en="Competitive Analysis">竞品对比分析</span></div>
+                <p class="detail-section-desc" data-zh="华为/腾讯/海康/Cisco逐一对比 · 差异化话术" data-en="Huawei/Tencent/Hikvision/Cisco comparison + differentiation">华为/腾讯/海康/Cisco逐一对比 · 差异化话术</p>
+                <div class="item-grid">
+                    <div class="item-card" onclick="showMd('meeting-compete','智慧会议室竞品对比')"><div class="body"><h4>智慧会议室竞品对比</h4><p>12页 · 逐竞品功能矩阵+应答话术</p><span class="ft ft-docx">DOCX</span></div></div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title"><div class="dot-indicator"></div><span data-zh="设备清单 & 报价模板" data-en="Device List & Pricing">设备清单 & 报价模板</span></div>
+                <p class="detail-section-desc" data-zh="三规模方案 · 含投资测算" data-en="Three scale options with ROI calculation">三规模方案 · 含投资测算</p>
+                <div class="item-grid">
+                    <div class="item-card" onclick="showMd('meeting-devices','智慧会议室设备清单模板')"><div class="body"><h4>智慧会议室设备清单模板</h4><p>小型/中型/大型三规模 · 控制器+适配器选型</p><span class="ft ft-xlsx">XLSX</span></div></div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title"><div class="dot-indicator"></div><span data-zh="配套交付物" data-en="Supporting Deliverables">配套交付物</span></div>
+                <div class="item-grid narrow">
+                    <div class="item-card" onclick="showMd('meeting-faq','智慧会议室 FAQ')"><div class="body"><h4>FAQ 常见问题</h4><p>客户高频15问 + 标准应答</p><span class="ft ft-docx">DOCX</span></div></div>
+                    <div class="item-card" onclick="showMd('meeting-script','会议室PPT讲解稿')"><div class="body"><h4>PPT 讲解稿</h4><p>逐页演讲要点 · 15分钟版</p><span class="ft ft-docx">DOCX</span></div></div>
+                    <div class="item-card" onclick="showMd('meeting-onepage','会议室一页纸方案')"><div class="body"><h4>一页纸方案</h4><p>A4单页 · 5秒看懂核心</p><span class="ft ft-docx">A4</span></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== SMART PARK FULL PACKAGE ========== -->
+        <div id="page-park" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="goHome()">← 返回</button>
+                <h2 data-zh="智慧公园 · 完整方案包" data-en="Smart Park · Full Package">智慧公园 · 完整方案包</h2>
+                <span class="badge-sm">7件套</span>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title"><div class="dot-indicator"></div><span data-zh="标准方案PPT" data-en="Standard Solution PPT">标准方案PPT</span></div>
+                <p class="detail-section-desc" data-zh="安防 · 生态养护 · 照明/能源 · 广播/信发 · 人员管理 · 19页" data-en="Security · Ecology · Lighting · Broadcasting · Personnel · 19 slides">安防 · 生态养护 · 照明/能源 · 广播/信发 · 人员管理 · 19页</p>
+                <div class="slide-grid" id="grid-park"></div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title"><div class="dot-indicator"></div><span data-zh="行业研究报告" data-en="Industry Research Report">行业研究报告</span></div>
+                <p class="detail-section-desc" data-zh="国内外案例 · 技术路线对比 · 建设标准 · 投资趋势" data-en="Case studies · Tech comparison · Standards · Investment trends">国内外案例 · 技术路线对比 · 建设标准 · 投资趋势</p>
+                <div class="item-grid">
+                    <div class="item-card" onclick="showMd('park-research','智慧公园行业研究报告')"><div class="body"><h4>智慧公园行业研究报告</h4><p>20+页 · 国内外案例+技术路线+政策</p><span class="ft ft-docx">DOCX</span></div></div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title"><div class="dot-indicator"></div><span data-zh="竞品对比分析" data-en="Competitive Analysis">竞品对比分析</span></div>
+                <p class="detail-section-desc" data-zh="传统方案 vs 超级设备方案 · 端侧联动差异化" data-en="Traditional vs Super Device · Edge-side differentiation">传统方案 vs 超级设备方案 · 端侧联动差异化</p>
+                <div class="item-grid">
+                    <div class="item-card" onclick="showMd('park-compete','智慧公园竞品对比')"><div class="body"><h4>智慧公园竞品对比</h4><p>传统IoT vs 鸿蒙超级设备方案对比</p><span class="ft ft-docx">DOCX</span></div></div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title"><div class="dot-indicator"></div><span data-zh="设备清单 & 报价模板" data-en="Device List & Pricing">设备清单 & 报价模板</span></div>
+                <p class="detail-section-desc" data-zh="五场景设备 · 接入方式 · 数量估算 · 拓扑说明" data-en="Five scenarios · Access methods · Estimation · Topology">五场景设备 · 接入方式 · 数量估算 · 拓扑说明</p>
+                <div class="item-grid">
+                    <div class="item-card" onclick="showMd('park-devices','智慧公园设备清单模板')"><div class="body"><h4>智慧公园设备清单模板</h4><p>五场景设备 · 接入方式 · 数量估算</p><span class="ft ft-xlsx">XLSX</span></div></div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title"><div class="dot-indicator"></div><span data-zh="配套交付物" data-en="Supporting Deliverables">配套交付物</span></div>
+                <div class="item-grid narrow">
+                    <div class="item-card" onclick="showMd('park-faq','智慧公园 FAQ')"><div class="body"><h4>FAQ 常见问题</h4><p>技术/商务/决策三类问题</p><span class="ft ft-docx">DOCX</span></div></div>
+                    <div class="item-card" onclick="showMd('park-script','公园PPT讲解稿')"><div class="body"><h4>PPT 讲解稿</h4><p>逐页演讲要点 · 时间分配</p><span class="ft ft-docx">DOCX</span></div></div>
+                    <div class="item-card" onclick="showMd('park-onepage','公园一页纸方案')"><div class="body"><h4>一页纸方案</h4><p>A4单页 · 领导快速决策</p><span class="ft ft-docx">A4</span></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== MARKDOWN DETAIL ========== -->
+        <div id="page-md" class="page">
+            <div class="page-header">
+                <button class="back-btn" id="md-back-btn" onclick="goBack()">← 返回</button>
+                <h2 id="md-title"></h2>
+            </div>
+            <div class="md-content" id="md-body"></div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="close" onclick="closeLightbox()">&times;</button>
+        <button class="nav prev" onclick="navSlide(-1)">&#8249;</button>
+        <img id="lightbox-img" src="" alt="">
+        <button class="nav next" onclick="navSlide(1)">&#8250;</button>
+        <div class="counter" id="lightbox-counter"></div>
+        <div class="watermark">PREVIEW ONLY</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const galleries = { meeting: { total: 19, path: 'assets/meeting-room/slide_' }, park: { total: 19, path: 'assets/smart-park/slide_' } };
+        let currentGallery = null, currentIndex = 0;
+        let navHistory = ['page-home'];
+
+        Object.keys(galleries).forEach(key => {
+            const grid = document.getElementById(`grid-${key}`);
+            const g = galleries[key];
+            for (let i = 1; i <= g.total; i++) {
+                const src = `${g.path}${String(i).padStart(2,'0')}.png`;
+                const div = document.createElement('div');
+                div.className = 'slide-thumb';
+                div.onclick = () => openLightbox(key, i - 1);
+                div.innerHTML = `<img src="${src}" alt=""><span class="num">${i}</span>`;
+                grid.appendChild(div);
+            }
+        });
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+
+        function showIndustry(key) {
+            navHistory.push(`page-${key}`);
+            showPage(`page-${key}`);
+        }
+
+        function showMd(file, title) {
+            fetch(`content/${file}.md`).then(r => r.text()).then(text => {
+                navHistory.push('page-md');
+                document.getElementById('md-title').textContent = title;
+                document.getElementById('md-body').innerHTML = marked.parse(text);
+                showPage('page-md');
+            }).catch(() => alert('内容加载失败'));
+        }
+
+        function goHome() {
+            navHistory = ['page-home'];
+            showPage('page-home');
+        }
+
+        function goBack() {
+            navHistory.pop();
+            const prev = navHistory[navHistory.length - 1] || 'page-home';
+            showPage(prev);
+        }
+
+        // Lightbox
+        function openLightbox(gallery, index) {
+            currentGallery = gallery; currentIndex = index;
+            updateLightbox();
+            document.getElementById('lightbox').classList.add('active');
+        }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+        function navSlide(dir) {
+            const total = galleries[currentGallery].total;
+            currentIndex = (currentIndex + dir + total) % total;
+            updateLightbox();
+        }
+        function updateLightbox() {
+            const g = galleries[currentGallery];
+            document.getElementById('lightbox-img').src = `${g.path}${String(currentIndex+1).padStart(2,'0')}.png`;
+            document.getElementById('lightbox-counter').textContent = `${currentIndex+1} / ${g.total}`;
+        }
+        document.addEventListener('keydown', e => {
+            if (!document.getElementById('lightbox').classList.contains('active')) return;
+            if (e.key==='Escape') closeLightbox();
+            if (e.key==='ArrowLeft') navSlide(-1);
+            if (e.key==='ArrowRight') navSlide(1);
+        });
+        document.addEventListener('contextmenu', e => { if (e.target.tagName==='IMG') e.preventDefault(); });
+
+        // Language Toggle
+        let currentLang = 'zh';
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-toggle button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.lang-toggle button').forEach(b => {
+                if ((lang === 'zh' && b.textContent === '中文') || (lang === 'en' && b.textContent === 'EN'))
+                    b.classList.add('active');
+            });
+            document.querySelectorAll('[data-zh][data-en]').forEach(el => {
+                el.innerHTML = el.getAttribute(`data-${lang}`);
+            });
+        }
+    </script>
+</body>
+</html>

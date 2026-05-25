@@ -1,0 +1,4 @@
+export_slides.py
+__pycache__/
+*.pyc
+.venv/
