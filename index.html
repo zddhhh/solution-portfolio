@@ -111,41 +111,30 @@
         /* Entry Cards */
         .entries { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; position: relative; z-index: 1; margin-bottom: 5rem; }
         .entry {
-            background: var(--glass); border: 1px solid var(--glass-border);
             border-radius: 16px; padding: 2.5rem 2rem; cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
             position: relative; overflow: hidden;
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            min-height: 240px; display: flex; flex-direction: column; justify-content: flex-end;
+            background-size: cover; background-position: center;
+            border: none;
         }
         .entry::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent 20%, var(--accent), transparent 80%);
-            opacity: 0; transition: opacity 0.3s;
-        }
-        .entry:hover { background: var(--glass-hover); border-color: rgba(0,0,0,0.1); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
-        .entry:hover::before { opacity: 0.8; }
-        .entry .cover {
-            width: 100%; height: 120px; border-radius: 8px; overflow: hidden; margin-bottom: 1rem;
-            position: relative;
-        }
-        .entry .cover img {
-            width: 100%; height: 100%; object-fit: cover; opacity: 0.85;
-            transition: opacity 0.3s, transform 0.5s; pointer-events: none;
-        }
-        .entry:hover .cover img { opacity: 1; transform: scale(1.03); }
-        .entry .cover::after {
             content: ''; position: absolute; inset: 0;
-            background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.15) 100%);
-            border-radius: 8px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%);
+            transition: background 0.3s;
         }
-        .entry h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
-        .entry .desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.2rem; font-weight: 300; }
-        .entry .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+        .entry:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,0.15); }
+        .entry:hover::before {
+            background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.45) 100%);
+        }
+        .entry h3 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; color: #fff; position: relative; z-index: 1; text-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+        .entry .desc { font-size: 0.82rem; color: rgba(255,255,255,0.85); line-height: 1.7; margin-bottom: 1rem; font-weight: 300; position: relative; z-index: 1; }
+        .entry .tags { display: flex; gap: 6px; flex-wrap: wrap; position: relative; z-index: 1; }
         .entry .tags span {
             padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 500;
-            background: rgba(99,102,241,0.06); color: var(--accent); border: 1px solid rgba(99,102,241,0.1);
+            background: rgba(255,255,255,0.18); color: #fff; border: 1px solid rgba(255,255,255,0.25);
+            backdrop-filter: blur(4px);
         }
-        .entry:nth-child(2) .tags span { background: rgba(13,148,136,0.06); color: var(--accent2); border-color: rgba(13,148,136,0.1); }
 
         /* Projects */
         .projects-section { position: relative; z-index: 1; margin-bottom: 5rem; }
@@ -351,16 +340,14 @@
             </div>
 
             <div class="entries">
-                <div class="entry" onclick="showIndustry('meeting')">
-                    <div class="cover"><img src="assets/cover-meeting.jpg" alt=""></div>
+                <div class="entry" onclick="showIndustry('meeting')" style="background-image:url('assets/cover-meeting.jpg')">
                     <h3 data-zh="智慧会议室" data-en="Smart Meeting Room">智慧会议室</h3>
                     <p class="desc" data-zh="端侧闭环联动 · 毫秒级响应 · 超级设备方案" data-en="Edge-side closed-loop · Millisecond response · Super Device">端侧闭环联动 · 毫秒级响应 · 超级设备方案</p>
                     <div class="tags">
                         <span>PPT</span><span data-zh="行研" data-en="Research">行研</span><span data-zh="竞品" data-en="Compete">竞品</span><span data-zh="清单" data-en="Devices">清单</span><span>FAQ</span><span data-zh="讲稿" data-en="Script">讲稿</span>
                     </div>
                 </div>
-                <div class="entry" onclick="showIndustry('park')">
-                    <div class="cover"><img src="assets/cover-park.jpg" alt=""></div>
+                <div class="entry" onclick="showIndustry('park')" style="background-image:url('assets/cover-park.jpg')">
                     <h3 data-zh="智慧公园" data-en="Smart Park">智慧公园</h3>
                     <p class="desc" data-zh="安防 · 生态养护 · 照明 · 广播 · 人员管理" data-en="Security · Ecology · Lighting · Broadcast · Personnel">安防 · 生态养护 · 照明 · 广播 · 人员管理</p>
                     <div class="tags">
